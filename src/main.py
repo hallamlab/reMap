@@ -52,7 +52,6 @@ def __internal_args(parse_args):
     ##########                                  ARGUMENTS FOR PATHS                                 ##########
     ##########################################################################################################
 
-    arg.ospath = parse_args.ospath
     arg.dspath = parse_args.dspath
     arg.mdpath = parse_args.mdpath
     arg.rspath = parse_args.rspath
@@ -88,7 +87,6 @@ def __internal_args(parse_args):
     ##########################################################################################################
 
     arg.train = parse_args.train
-    arg.evaluate = parse_args.evaluate
     arg.transform = parse_args.transform
     arg.top_k = parse_args.top_k
     arg.alpha = parse_args.alpha
@@ -150,10 +148,6 @@ def parse_command_line():
                         help='Number of epochs over the training set. (default value: 3).')
 
     # Arguments for path
-    parser.add_argument('--ospath', default=fph.OBJECT_PATH, type=str,
-                        help='The path to the data object that contains extracted '
-                             'information from the MetaCyc database. The default is '
-                             'set to object folder outside the source code.')
     parser.add_argument('--dspath', default=fph.DATASET_PATH, type=str,
                         help='The path to the dataset after the samples are processed. '
                              'The default is set to dataset folder outside the source code.')
@@ -171,31 +165,31 @@ def parse_command_line():
     # Arguments for file names and models
     parser.add_argument('--file-name', type=str, default='biocyc',
                         help='The file name to save an object. (default value: "biocyc")')
-    parser.add_argument('--hin-name', type=str, default='hin_cmt.pkl',
-                        help='The name of the hin model file. (default value: "hin_cmt.pkl")')
-    parser.add_argument('--features-name', type=str, default='biocyc_features.npz',
-                        help='The features file name. (default value: "biocyc_features.npz")')
-    parser.add_argument('--bag-centroid-name', type=str, default='biocyc_bag_centroid.npz',
-                        help='The bags centroids file name. (default value: "biocyc_bag_centroid.npz")')
-    parser.add_argument('--rho-name', type=str, default='biocyc_rho.npz',
-                        help='The rho file name. (default value: "biocyc_rho.npz")')
-    parser.add_argument('--bag-sigma-name', type=str, default='soap_biocyc_29_sigma.npz',
-                        help='The file name for bags correlations. (default value: "soap_biocyc_20_sigma.npz")')
-    parser.add_argument('--bag-phi-name', type=str, default='soap_biocyc_29_exp_phi.npz',
-                        help='The file name for bags distribution over labels. '
-                             '(default value: "soap_biocyc_28_exp_phi.npz")')
-    parser.add_argument('--vocab-name', type=str, default='vocab_biocyc.pkl',
-                        help='The vocab file name. (default value: "vocab_biocyc.pkl").')
+    parser.add_argument('--hin-name', type=str, default='hin.pkl',
+                        help='The name of the hin model file. (default value: "hin.pkl")')
+    parser.add_argument('--features-name', type=str, default='features.npz',
+                        help='The features file name. (default value: "features.npz")')
+    parser.add_argument('--bag-centroid-name', type=str, default='bag_centroid.npz',
+                        help='The bags centroids file name. (default value: "bag_centroid.npz")')
+    parser.add_argument('--rho-name', type=str, default='rho.npz',
+                        help='The rho file name. (default value: "rho.npz")')
+    parser.add_argument('--bag-sigma-name', type=str, default='sigma.npz',
+                        help='The file name for bags covariance. (default value: "sigma.npz")')
+    parser.add_argument('--bag-phi-name', type=str, default='phi.npz',
+                        help='The file name for labels distribution over bags. '
+                             '(default value: "phi.npz")')
+    parser.add_argument('--vocab-name', type=str, default='vocab.pkl',
+                        help='The vocab file name. (default value: "vocab.pkl").')
     parser.add_argument('--X-name', type=str, default='biocyc_X.pkl',
                         help='The X file name. (default value: "biocyc_X.pkl")')
     parser.add_argument('--y-name', type=str, default='biocyc_y.pkl',
                         help='The y file name. (default value: "biocyc_y.pkl")')
     parser.add_argument('--yB-name', type=str, default='biocyc_B.pkl',
                         help='The bags file name. (default value: "biocyc_B.pkl")')
-    parser.add_argument('--bags-labels', type=str, default='biocyc_bag_pathway.pkl',
-                        help='The bags to labels grouping file name. '
-                             '(default value: "biocyc_bag_pathway.pkl")')
-    parser.add_argument('--model-name', type=str, default='reMap_1',
+    parser.add_argument('--bags-labels', type=str, default='bag_pathway.pkl',
+                        help='The file name for bags consisting of associated labels. '
+                             '(default value: "bag_pathway.pkl")')
+    parser.add_argument('--model-name', type=str, default='reMap',
                         help='The file name, excluding extension, to save '
                              'an object. (default value: "reMap")')
 
@@ -213,9 +207,7 @@ def parse_command_line():
     # Arguments for training and evaluation
     parser.add_argument('--train', action='store_true', default=False,
                         help='Whether to train the reMap model. (default value: False).')
-    parser.add_argument('--evaluate', action='store_true', default=False,
-                        help='Whether to evaluate reMap\'s performances. (default value: False).')
-    parser.add_argument('--', action='store_true', default=False,
+    parser.add_argument('--transform', action='store_true', default=False,
                         help='Whether to transform labels to bags from inputs using '
                         'a pretrained reMap model. (default value: False).')
     parser.add_argument('--top-k', type=int, default=250,
@@ -239,8 +231,8 @@ def parse_command_line():
                              'be set between (0.5, 1.0] to guarantee asymptotic convergence. (default value: 0.7).')
     parser.add_argument('--delay', type=float, default=1.,
                         help='Delay factor down weights early iterations. (default value: 0.9).')
-    parser.add_argument('--max-sampling', default=1, type=int,
-                        help='Maximum number of random samplings. (default value: 1).')
+    parser.add_argument('--max-sampling', default=3, type=int,
+                        help='Maximum number of random samplings. (default value: 3).')
     parser.add_argument('--ssample-input-size', default=0.05, type=float,
                         help='The size of input subsample. (default value: 0.05).')
     parser.add_argument('--ssample-label-size', default=50, type=int,
@@ -276,7 +268,7 @@ def parse_command_line():
     parser.add_argument("--random-allocation", action='store_true', default=False,
                         help='Whether to apply randomized allocation for reMap. (default value: False).')
     parser.add_argument('--theta-bern', type=float, default=0.3,
-                        help='A parameter to set randomly bags with -1, or +1. (default value: 0.3).')
+                        help='The Bernoulli probability value for allocating bags randomly to either -1, or +1. (default value: 0.3).')
     parser.add_argument("--min-neg-ratio", type=float, default=0.3,
                         help="A hyper-parameter for creating a balanced positive/negative bags. (default value: 0.3).")
     parser.add_argument("--lambdas", nargs="+", type=float, default=[0.01, 0.01, 0.01, 0.01, 0.01, 0.01],
