@@ -32,10 +32,10 @@ Please download the following files from [Zenodo](https://zenodo.org/record/3711
     - "golden_X.pkl": Golden dataset of size (63, 3650). First six examples correspond to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
     - "golden_y.pkl": Golden dataset of size (63, 2526). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
     - "golden_B.pkl": Golden dataset of size (63, 200). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
-    - "biocyc_X.pkl": BioCyc (v20.5) dataset of size (9257, 3650).
-    - "biocyc_y.pkl": BioCyc (v20.5) dataset of size (9257, 2526).
-    - "biocyc_B.pkl": BioCyc (v20.5) dataset of size (9257, 200).
-    - "reMap.pkl": a pretrained reMap model using "biocyc_X.pkl" and "biocyc_y.pkl".
+    - "biocyc205_tier23_9255_X.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 3650).
+    - "biocyc205_tier23_9255_y.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 2526).
+    - "biocyc205_tier23_9255_B.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 200).
+    - "reMap.pkl": a pretrained reMap model using "biocyc205_tier23_9255_X.pkl" and "biocyc205_tier23_9255_y.pkl".
 
 ## Installation and Basic Usage
 Run the following commands to clone the repository to an appropriate location:
@@ -47,7 +47,7 @@ For all experiments, navigate to ``src`` folder then run the commands of your ch
 ### Preprocessing
 To preprocess data, we provide few examples.
 
-Description about arguments in all examples: *--define-bags* is a boolean variable indicating whether to construct bags, *--recover-max-bags* is a boolean variable indicating whether to recover an initial set of bags for each example, *--alpha* is a hyper-parameter for controlling bags centroids, *--top-k* is hyper-parameter to retrieve top k labels for each bag, *--v-cos* corresponds a cutoff threshold for consine similarity, *--hin-name* is the name for the heterogeneous information network file (e.g. "hin.pkl"), *--vocab-name* corresponds the name of the vocabulary (pathway set) file (e.g. "vocab.pkl"), *--bag-phi-name* is the name of the file indicating labels distribution over bags (e.g. "phi.npz"), *--bag-sigma-name* is the bags covariance file name (e.g. "sigma.npz"), *--features-name* corresponds the file name of the features (e.g. "pathway2vec_embeddings.npz"), *--file-name* corresponds the PREFIX name of generated files, and *--y-name* is the pathway space of multi-label data (e.g. "biocyc_y.pkl").
+Description about arguments in all examples: *--define-bags* is a boolean variable indicating whether to construct bags, *--recover-max-bags* is a boolean variable indicating whether to recover an initial set of bags for each example, *--alpha* is a hyper-parameter for controlling bags centroids, *--top-k* is hyper-parameter to retrieve top k labels for each bag, *--v-cos* corresponds a cutoff threshold for consine similarity, *--hin-name* is the name for the heterogeneous information network file (e.g. "hin.pkl"), *--vocab-name* corresponds the name of the vocabulary (pathway set) file (e.g. "vocab.pkl"), *--bag-phi-name* is the name of the file indicating labels distribution over bags (e.g. "phi.npz"), *--bag-sigma-name* is the bags covariance file name (e.g. "sigma.npz"), *--features-name* corresponds the file name of the features (e.g. "pathway2vec_embeddings.npz"), *--file-name* corresponds the PREFIX name of generated files, and *--y-name* is the pathway space of multi-label data (e.g. "biocyc205_tier23_9255_y.pkl").
 
 The results of running all the commands below will be stored in *--dspath* location. Several files will be generated (e.g. PREFIX + "bag_pathway.pkl") 
 
@@ -59,12 +59,12 @@ To **construct bags**, execute the following command:
 #### Example 2
 To **recover maximum set of bags**, execute the following command:
 
-``python main.py --recover-max-bags --alpha 16 --v-cos 0.1 --file-name "biocyc" --y-name "biocyc_y.pkl" --dspath "[path to the dataset]"``
+``python main.py --recover-max-bags --alpha 16 --v-cos 0.1 --file-name "biocyc" --y-name "biocyc205_tier23_9255_y.pkl" --dspath "[path to the dataset]"``
 
 #### Example 3
 If you wish to perform the above two examples, execute the following command:
 
-``python main.py --define-bags --recover-max-bags --alpha 16 --top-k 90 --v-cos 0.1 --hin-name "hin.pkl" --vocab-name "vocab.pkl" --bag-phi-name "phi.npz" --bag-sigma-name "sigma.npz" --features-name "pathway2vec_embeddings.npz" --file-name "biocyc" --y-name "biocyc_y.pkl" --mdpath "[path to the model]" --dspath "[path to the dataset]"``
+``python main.py --define-bags --recover-max-bags --alpha 16 --top-k 90 --v-cos 0.1 --hin-name "hin.pkl" --vocab-name "vocab.pkl" --bag-phi-name "phi.npz" --bag-sigma-name "sigma.npz" --features-name "pathway2vec_embeddings.npz" --file-name "biocyc" --y-name "biocyc205_tier23_9255_y.pkl" --mdpath "[path to the model]" --dspath "[path to the dataset]"``
 
 
 ### Training
@@ -75,26 +75,26 @@ For trainning, we provide two examples.
 The results of running all the commands below will be stored in two locations: *--mdpath* which contains the trained model with additional files and *--rspath* which has the cost file.
 
 #### Example 1
-If you wish to randomly allocate bags for a given multi-label bag dataset (e.g. "biocyc_B.pkl") that is obtained from Example 2 or 3, execute the following command:
+If you wish to randomly allocate bags for a given multi-label bag dataset (e.g. "biocyc205_tier23_9255_B.pkl") that is obtained from Example 2 or 3, execute the following command:
 
-``python main.py --train --random-allocation --theta-bern 0.3 --yB-name "biocyc_B.pkl" --model-name "[file name (without extension)]" --dspath "[path to the store bags dataset]"``
+``python main.py --train --random-allocation --theta-bern 0.3 --yB-name "biocyc205_tier23_9255_B.pkl" --model-name "[file name (without extension)]" --dspath "[path to the store bags dataset]"``
 
 where *--theta-bern* is a Bernoulli probability value for allocating bags randomly to either -1, or +1. 
 
 #### Example 2
-To train reMap given multi-label input data (e.g. "biocyc_X.pkl"), multi-label pathway data (e.g. "biocyc_y.pkl"), and multi-label bag dataset (e.g. "biocyc_B.pkl") that is obtained from Example 2 or 3, execute the following command:
+To train reMap given multi-label input data (e.g. "biocyc205_tier23_9255_X.pkl"), multi-label pathway data (e.g. "biocyc205_tier23_9255_y.pkl"), and multi-label bag dataset (e.g. "biocyc205_tier23_9255_B.pkl") that is obtained from Example 2 or 3, execute the following command:
 
-``python main.py --train --calc-label-cost --alpha 16 --ssample-input-size 0.05 --ssample-label-size 50 --calc-subsample-size 50 --bags-labels "bag_pathway.pkl" --features-name "features.npz" --bag-centroid-name "bag_centroid.npz" --rho-name "rho.npz" --X-name "biocyc_X.pkl" --y-name "biocyc_y.pkl" --yB-name "biocyc_B.pkl" --file-name "biocyc" --model-name "[model name (without extension)]" --mdpath "[path to the model]" --dspath "[path to the dataset]" --rspath "[path to store the results (e.g. costs)]" --logpath "[path to the log directory] --batch 50 --num-epochs 3 --num-jobs 10``
+``python main.py --train --calc-label-cost --alpha 16 --ssample-input-size 0.05 --ssample-label-size 50 --calc-subsample-size 50 --bags-labels "bag_pathway.pkl" --features-name "features.npz" --bag-centroid-name "bag_centroid.npz" --rho-name "rho.npz" --X-name "biocyc205_tier23_9255_X.pkl" --y-name "biocyc205_tier23_9255_y.pkl" --yB-name "biocyc205_tier23_9255_B.pkl" --file-name "biocyc" --model-name "[model name (without extension)]" --mdpath "[path to the model]" --dspath "[path to the dataset]" --rspath "[path to store the results (e.g. costs)]" --logpath "[path to the log directory] --batch 50 --num-epochs 3 --num-jobs 10``
 
-where *--calc-label-cost* is a boolean variable indicating whether to estimate the cost of labels, *--alpha* is a hyper-parameter for controlling bags centroids, *--ssample-input-size* is the input subsample size, *--ssample-label-size* corresponds the maximum number of labels to be sampled, *--calc-subsample-size* is loss computed on selected samples, *--bags-labels* is the file name to bagging pathways (e.g. "bag_pathway.pkl"), *--features-name* corresponds the file name of the features (e.g. "features.npz"), *--bag-centroid-name* corresponds the file name of bags centroids (e.g. "bag_centroid.npz"), *--rho-name* is the file name of bags correlations (e.g. "rho.npz"), *--batch* is batch size, *--num-epochs* corresponds the number of iterations over the training set, *--num-jobs* corresponds the number of parallel workers, *--X-name* is the input space of a multi-label data (e.g. "biocyc_X.pkl"), *--y-name* is the pathway space of multi-label data (e.g. "biocyc_y.pkl"), and *--yB-name* is the bag space of a multi-label data (e.g. "biocyc_B.pkl") that is obtained from Example 2 or 3.
+where *--calc-label-cost* is a boolean variable indicating whether to estimate the cost of labels, *--alpha* is a hyper-parameter for controlling bags centroids, *--ssample-input-size* is the input subsample size, *--ssample-label-size* corresponds the maximum number of labels to be sampled, *--calc-subsample-size* is loss computed on selected samples, *--bags-labels* is the file name to bagging pathways (e.g. "bag_pathway.pkl"), *--features-name* corresponds the file name of the features (e.g. "features.npz"), *--bag-centroid-name* corresponds the file name of bags centroids (e.g. "bag_centroid.npz"), *--rho-name* is the file name of bags correlations (e.g. "rho.npz"), *--batch* is batch size, *--num-epochs* corresponds the number of iterations over the training set, *--num-jobs* corresponds the number of parallel workers, *--X-name* is the input space of a multi-label data (e.g. "biocyc205_tier23_9255_X.pkl"), *--y-name* is the pathway space of multi-label data (e.g. "biocyc205_tier23_9255_y.pkl"), and *--yB-name* is the bag space of a multi-label data (e.g. "biocyc205_tier23_9255_B.pkl") that is obtained from Example 2 or 3.
 
 
 ### Transforming
 To transform a dataset (e.g. "golden_X.pkl") into bags using pretrained model, execute the following command:
 
-``python main.py --transform --ssample-label-size 100 --bags-labels "bag_pathway.pkl" --features-name "features.npz" --bag-centroid-name "bag_centroid.npz" --rho-name "rho.npz" --X-name "biocyc_X.pkl" --y-name "biocyc_y.pkl" --model-name "[model name (without prefix and extension, e.g. "reMap.pkl")]" --mdpath "[path to the model]" --dspath "[path to the dataset]" --batch 50 --num-jobs 10``
+``python main.py --transform --ssample-label-size 100 --bags-labels "bag_pathway.pkl" --features-name "features.npz" --bag-centroid-name "bag_centroid.npz" --rho-name "rho.npz" --X-name "biocyc205_tier23_9255_X.pkl" --y-name "biocyc205_tier23_9255_y.pkl" --file-name "[name of bag data excluding extension]" --model-name "[model name (without prefix and extension, e.g. "reMap.pkl")]" --mdpath "[path to the model]" --dspath "[path to the dataset]" --batch 50 --num-jobs 10``
 
-where *--ssample-label-size* corresponds the maximum number of labels to be sampled, *--bags-labels* is the file name to bagging pathways (e.g. "bag_pathway.pkl"), *--features-name* corresponds the file name of the features (e.g. "features.npz"), *--bag-centroid-name* corresponds the file name of bags centroids (e.g. "bag_centroid.npz"), *--rho-name* is the file name of bags correlations (e.g. "rho.npz"), *--batch* is batch size, *--num-jobs* corresponds the number of parallel workers, *--X-name* is the input space of a multi-label data (e.g. "biocyc_X.pkl"), and *--y-name* is the pathway space of multi-label data (e.g. "biocyc_y.pkl").
+where *--ssample-label-size* corresponds the maximum number of labels to be sampled, *--bags-labels* is the file name to bagging pathways (e.g. "bag_pathway.pkl"), *--features-name* corresponds the file name of the features (e.g. "features.npz"), *--bag-centroid-name* corresponds the file name of bags centroids (e.g. "bag_centroid.npz"), *--rho-name* is the file name of bags correlations (e.g. "rho.npz"), *--batch* is batch size, *--num-jobs* corresponds the number of parallel workers, *--X-name* is the input space of a multi-label data (e.g. "biocyc205_tier23_9255_X.pkl"), *--y-name* is the pathway space of multi-label data (e.g. "biocyc205_tier23_9255_y.pkl"), and *--file-name* is the PREFIX name of generated bag data (excluding extension).
 
 
 ## Citing
