@@ -10,9 +10,9 @@ The codebase is tested to work under Python 3.7. To install the necessary requir
 
 Basically, *reMap* requires following packages:
 - [Anaconda](https://www.anaconda.com/)
-- [NumPy](http://www.numpy.org/) (== 1.18.5)
-- [scikit-learn](https://scikit-learn.org/stable/) (== 0.23)
-- [scipy](https://www.scipy.org/index.html) (==1.5.0)
+- [NumPy](http://www.numpy.org/) (>= 1.18)
+- [scikit-learn](https://scikit-learn.org/stable/) (>= 0.23)
+- [scipy](https://www.scipy.org/index.html) (>= 1.5)
 
 
 ## Experimental Objects and Test Samples
