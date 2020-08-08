@@ -32,6 +32,9 @@ Please download the following files from [Zenodo](https://zenodo.org/record/3711
     - "golden_X.pkl": Golden dataset of size (63, 3650). First six examples correspond to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
     - "golden_y.pkl": Golden dataset of size (63, 2526). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
     - "golden_B.pkl": Golden dataset of size (63, 200). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
+    - "cami_X.pkl": CAMI dataset of size (40, 3650).
+    - "cami_y.pkl": CAMI dataset of size (40, 2526).
+    - "cami_B.pkl": CAMI dataset of size (40, 200).
     - "biocyc205_tier23_9255_X.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 3650).
     - "biocyc205_tier23_9255_y.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 2526).
     - "biocyc205_tier23_9255_B.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 200).
