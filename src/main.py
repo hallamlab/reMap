@@ -214,7 +214,7 @@ def parse_command_line():
                         help='Whether to train the reMap model. (default value: False).')
     parser.add_argument('--transform', action='store_true', default=False,
                         help='Whether to transform labels to bags from inputs using '
-                        'a pretrained reMap model. (default value: False).')
+                             'a pretrained reMap model. (default value: False).')
     parser.add_argument('--top-k', type=int, default=250,
                         help='Top k labels to be considered for each bag. (default value: 250).')
     parser.add_argument("--alpha", type=float, default=16,

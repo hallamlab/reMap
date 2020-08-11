@@ -1,9 +1,10 @@
+import numpy as np
 import os
+import pickle as pkl
 import sys
 import traceback
-import numpy as np
-import pickle as pkl
 from scipy.sparse import lil_matrix
+
 
 def save_data(data, file_name: str, save_path: str, tag: str = '', mode: str = 'wb', w_string: bool = False,
               print_tag: bool = True):
@@ -38,6 +39,7 @@ def __load_sparse(file_name):
         data = np.load(file_name)
         if type(data) is lil_matrix or type(data) is np.ndarray:
             return data
+
 
 def load_data(file_name, load_path, load_X=False, mode='rb', tag='data', print_tag=True):
     '''
