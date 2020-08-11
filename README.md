@@ -16,19 +16,7 @@ Basically, *reMap* requires following packages:
 
 
 ## Experimental Objects and Test Samples
-Please download the following files from [Zenodo](https://zenodo.org/record/3711138#.Xn2fgXVKjeQ). 
-- The link contains the following preprocessed files:
-    - "vocab.pkl": a set of 2526 pathways ("idx: metacyc pathway id").
-    - "idxvocab.pkl": indices of 2526 pathways ("idx").
-    - "hin.pkl": a sample of heterogeneous information network. 
-    - "bag_pathway.pkl": grouping pathways to bags of size (200, 2526).
-    - "pathway2vec_embeddings.npz": a sample of embeddings (22593, 128). Based on your tests, you need to generate features using [pathway2vec](https://github.com/hallamlab/pathway2vec).
-    - "features.npz": extracted pathway features of size (2526, 128).
-    - "phi.npz": distribution of pathways over bags of size (200, 2526).
-    - "sigma.npz": bags covariance of size (200, 200).
-    - "rho.npz": bags correlations of size (200, 200).
-    - "centroid.npz": bags centroid of size (200, 128). 
-- We also provided pretrained models and samples for testing:
+Please download the following files from [Zenodo](https://zenodo.org/record/3962683#.XyH972NKjeQ). The description about files:
     - "golden_X.pkl": Golden dataset of size (63, 3650). First six examples correspond to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
     - "golden_y.pkl": Golden dataset of size (63, 2526). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
     - "golden_B.pkl": Golden dataset of size (63, 200). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
@@ -38,7 +26,17 @@ Please download the following files from [Zenodo](https://zenodo.org/record/3711
     - "biocyc205_tier23_9255_X.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 3650).
     - "biocyc205_tier23_9255_y.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 2526).
     - "biocyc205_tier23_9255_B.pkl": BioCyc (v20.5 tier 2 \& 3) dataset of size (9255, 200).
-    - "reMap.pkl": a pretrained reMap model using "biocyc205_tier23_9255_X.pkl" and "biocyc205_tier23_9255_y.pkl".
+    - "vocab.pkl": a set of 2526 pathways ("idx: metacyc pathway id").
+    - "idxvocab.pkl": indices of 2526 pathways ("idx").
+    - "hin.pkl": a sample of heterogeneous information network. 
+    - "bag_pathway.pkl": grouping pathways to bags of size (200, 2526).
+    - "pathway2vec_embeddings.npz": a sample of embeddings (22593, 128) using RUST-norm. Based on your tests, you need to generate features using [pathway2vec](https://github.com/hallamlab/pathway2vec).
+    - "features.npz": extracted pathway features of size (2526, 128).
+    - "phi.npz": distribution of pathways over bags of size (200, 2526).
+    - "sigma.npz": bags covariance of size (200, 200).
+    - "rho.npz": bags correlations of size (200, 200).
+    - "bag_centroid.npz": bags centroid of size (200, 128).
+    - "reMap.pkl": a pretrained reMap model using "biocyc205_tier23_9255_X.pkl" and "biocyc205_tier23_9255_y.pkl". This model was trained using [SOAP](https://github.com/hallamlab/cbt) with supplementray pathway information.
 
 ## Installation and Basic Usage
 Run the following commands to clone the repository to an appropriate location:

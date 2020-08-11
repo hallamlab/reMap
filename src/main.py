@@ -28,8 +28,10 @@ def __print_header():
     print('Maintainer: ' + __maintainer__)
     print('Email: ' + __email__)
     print('Status: ' + __status__)
-    print('Date: ' + datetime.datetime.strptime(__date__, "%d/%m/%Y").strftime("%d-%B-%Y"))
-    print('Description: ' + textwrap.TextWrapper(width=45, subsequent_indent='\t     ').fill(__description__))
+    print('Date: ' + datetime.datetime.strptime(__date__,
+                                                "%d/%m/%Y").strftime("%d-%B-%Y"))
+    print('Description: ' + textwrap.TextWrapper(width=45,
+                                                 subsequent_indent='\t     ').fill(__description__))
     print('# ' + '=' * 50)
 
 
@@ -141,9 +143,12 @@ def parse_command_line():
 
     parser.add_argument('--display-interval', default=-1, type=int,
                         help='display intervals. -1 means display per each iteration.')
-    parser.add_argument('--random_state', default=12345, type=int, help='Random seed. (default value: 12345).')
-    parser.add_argument('--num-jobs', type=int, default=1, help='Number of parallel workers. Default is 2.')
-    parser.add_argument('--batch', type=int, default=30, help='Batch size. (default value: 30).')
+    parser.add_argument('--random_state', default=12345,
+                        type=int, help='Random seed. (default value: 12345).')
+    parser.add_argument('--num-jobs', type=int, default=1,
+                        help='Number of parallel workers. Default is 2.')
+    parser.add_argument('--batch', type=int, default=30,
+                        help='Batch size. (default value: 30).')
     parser.add_argument('--num-epochs', default=3, type=int,
                         help='Number of epochs over the training set. (default value: 3).')
 
@@ -224,8 +229,10 @@ def parse_command_line():
                         help='Whether to have a snapshot of history probabilities. (default value: False).')
     parser.add_argument('--learning-type', default='optimal', type=str, choices=['optimal', 'sgd'],
                         help='The learning rate schedule. (default value: "optimal")')
-    parser.add_argument('--lr', default=0.0001, type=float, help='The learning rate. (default value: 0.0001).')
-    parser.add_argument('--lr0', default=0.0, type=float, help='The initial learning rate. (default value: 0.0).')
+    parser.add_argument('--lr', default=0.0001, type=float,
+                        help='The learning rate. (default value: 0.0001).')
+    parser.add_argument('--lr0', default=0.0, type=float,
+                        help='The initial learning rate. (default value: 0.0).')
     parser.add_argument('--fr', type=float, default=0.9,
                         help='Forgetting rate to control how quickly old information is forgotten. The value should '
                              'be set between (0.5, 1.0] to guarantee asymptotic convergence. (default value: 0.7).')

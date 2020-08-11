@@ -35,10 +35,13 @@ def __train(arg):
         # load a hin file
         hin = load_data(file_name=arg.hin_name, load_path=arg.mdpath,
                         tag="heterogeneous information network")
-        node2idx_path2vec = dict((node[0], node[1]["mapped_idx"]) for node in hin.nodes(data=True))
+        node2idx_path2vec = dict((node[0], node[1]["mapped_idx"])
+                                 for node in hin.nodes(data=True))
         # map pathways indices of vocab to path2vec pathways indices
-        vocab = load_data(file_name=arg.vocab_name, load_path=arg.dspath, tag="vocabulary")
-        idxvocab = np.array([idx for idx, v in vocab.items() if v in node2idx_path2vec])
+        vocab = load_data(file_name=arg.vocab_name,
+                          load_path=arg.dspath, tag="vocabulary")
+        idxvocab = np.array(
+            [idx for idx, v in vocab.items() if v in node2idx_path2vec])
         del hin
 
         # define pathways 2 bags_labels
@@ -46,7 +49,8 @@ def __train(arg):
         phi = phi[phi.files[0]]
         bags_labels = np.argsort(-phi)
         bags_labels = bags_labels[:, :arg.top_k]
-        labels_distr_idx = np.array([[pathway for pathway in bag if pathway in idxvocab] for bag in bags_labels])
+        labels_distr_idx = np.array(
+            [[pathway for pathway in bag if pathway in idxvocab] for bag in bags_labels])
         bags_labels = preprocessing.MultiLabelBinarizer().fit_transform(labels_distr_idx)
         labels_distr_idx = [[list(idxvocab).index(label_idx) for label_idx in bag_idx] for bag_idx in
                             labels_distr_idx]
@@ -68,20 +72,24 @@ def __train(arg):
         rho = rho / (max_rho - min_rho)
 
         # extracting pathway features
-        path2vec_features = np.load(file=os.path.join(arg.mdpath, arg.features_name))
+        path2vec_features = np.load(
+            file=os.path.join(arg.mdpath, arg.features_name))
         path2vec_features = path2vec_features[path2vec_features.files[0]]
-        pathways_idx = np.array([node2idx_path2vec[v] for idx, v in vocab.items() if v in node2idx_path2vec])
+        pathways_idx = np.array(
+            [node2idx_path2vec[v] for idx, v in vocab.items() if v in node2idx_path2vec])
         features = path2vec_features[pathways_idx, :]
         features = features / np.linalg.norm(features, axis=1)[:, np.newaxis]
 
         # get centroids of bags_labels
-        C = np.dot(bags_labels, features) / np.sum(bags_labels, axis=1)[:, np.newaxis]
+        C = np.dot(bags_labels, features) / \
+            np.sum(bags_labels, axis=1)[:, np.newaxis]
         C = arg.alpha * C
 
         # save files
         np.savez(os.path.join(arg.dspath, arg.file_name + "_exp_phi_trim.npz"), phi)
         np.savez(os.path.join(arg.dspath, arg.file_name + "_rho.npz"), rho)
-        np.savez(os.path.join(arg.dspath, arg.file_name + "_features.npz"), features)
+        np.savez(os.path.join(arg.dspath, arg.file_name +
+                              "_features.npz"), features)
         np.savez(os.path.join(arg.dspath, arg.file_name + "_bag_centroid.npz"), C)
         save_data(data=bags_labels, file_name=arg.file_name + "_bag_pathway.pkl", save_path=arg.dspath,
                   tag="bags_labels with associated pathways", mode="wb")
@@ -96,9 +104,11 @@ def __train(arg):
         steps = steps + 1
 
         # load files
-        features = np.load(file=os.path.join(arg.dspath, arg.file_name + "_features.npz"))
+        features = np.load(file=os.path.join(
+            arg.dspath, arg.file_name + "_features.npz"))
         features = features[features.files[0]]
-        C = np.load(file=os.path.join(arg.dspath, arg.file_name + "_bag_centroid.npz"))
+        C = np.load(file=os.path.join(
+            arg.dspath, arg.file_name + "_bag_centroid.npz"))
         C = C[C.files[0]]
         bags_labels = load_data(file_name=arg.file_name + "_bag_pathway.pkl", load_path=arg.dspath,
                                 tag="bags_labels with associated pathways")
@@ -120,7 +130,8 @@ def __train(arg):
                     pathways[list(idxvocab).index(ptwy_idx)] = 1
             pathways = np.diag(pathways)
             features = pathways @ features
-            sample_bag_features = np.dot(bags_labels, features) / np.sum(bags_labels, axis=1)[:, np.newaxis]
+            sample_bag_features = np.dot(
+                bags_labels, features) / np.sum(bags_labels, axis=1)[:, np.newaxis]
             sample_bag_features = arg.alpha * sample_bag_features
             np.nan_to_num(sample_bag_features, copy=False)
             cos = cosine_distances(C, sample_bag_features) / 2
@@ -139,7 +150,8 @@ def __train(arg):
     ##########################################################################################################
 
     if arg.train:
-        print("\n{0})- Training {1} dataset using reMap model...".format(steps, arg.y_name))
+        print(
+            "\n{0})- Training {1} dataset using reMap model...".format(steps, arg.y_name))
         steps = steps + 1
 
         # load files
@@ -152,14 +164,16 @@ def __train(arg):
             y_Bag = y_Bag.toarray()
             for bag_idx in np.arange(y_Bag.shape[1]):
                 if np.sum(y_Bag[:, bag_idx]) == num_samples:
-                    y_Bag[:, bag_idx] = np.random.binomial(1, arg.theta_bern, num_samples)
+                    y_Bag[:, bag_idx] = np.random.binomial(
+                        1, arg.theta_bern, num_samples)
             y_Bag[y_Bag == 0] = -1
             y_Bag = lil_matrix(y_Bag)
             # save dataset with maximum bags_labels
             save_data(data=lil_matrix(y_Bag), file_name=arg.model_name + "_B.pkl", save_path=arg.dspath, mode="wb",
                       tag="bags to labels data")
         else:
-            features = np.load(file=os.path.join(arg.dspath, arg.features_name))
+            features = np.load(file=os.path.join(
+                arg.dspath, arg.features_name))
             features = features[features.files[0]]
             C = np.load(file=os.path.join(arg.dspath, arg.bag_centroid_name))
             C = C[C.files[0]]
@@ -188,13 +202,13 @@ def __train(arg):
                       centroids=C, model_name=arg.model_name, model_path=arg.mdpath, result_path=arg.rspath,
                       snapshot_history=arg.snapshot_history, display_params=display_params)
 
-
     ##########################################################################################################
     ######################                           TRANSFORM                          ######################
     ##########################################################################################################
-    
+
     if arg.transform:
-        print("\n{0})- Predicting dataset using a pre-trained reMap model...".format(steps))
+        print(
+            "\n{0})- Predicting dataset using a pre-trained reMap model...".format(steps))
 
         # load files
         print("\t>> Loading files...")
@@ -210,13 +224,14 @@ def __train(arg):
         # load data
         X = load_data(file_name=arg.X_name, load_path=arg.dspath, tag="X")
         y = load_data(file_name=arg.y_name, load_path=arg.dspath, tag="y")
-        model = load_data(file_name=arg.model_name + ".pkl", load_path=arg.mdpath, tag="reMap model")
+        model = load_data(file_name=arg.model_name + ".pkl",
+                          load_path=arg.mdpath, tag="reMap model")
 
         print("\t>> Predict bags...")
         y_Bag = model.transform(X=X, y=y, bags_labels=bags_labels, bags_correlation=rho, label_features=features,
                                 centroids=C, subsample_labels_size=arg.ssample_label_size,
-                                max_sampling=arg.max_sampling, snapshot_history=arg.snapshot_history, 
-                                decision_threshold=arg.decision_threshold, batch_size=arg.batch, num_jobs=arg.num_jobs, 
+                                max_sampling=arg.max_sampling, snapshot_history=arg.snapshot_history,
+                                decision_threshold=arg.decision_threshold, batch_size=arg.batch, num_jobs=arg.num_jobs,
                                 file_name=arg.file_name, result_path=arg.rspath)
         # save dataset with maximum bags_labels
         save_data(data=lil_matrix(y_Bag), file_name=arg.file_name + "_B.pkl", save_path=arg.dspath, mode="wb",
@@ -235,7 +250,8 @@ def train(arg):
                 actions += ["TRAIN reMap"]
             if arg.transform:
                 actions += ["TRANSFORM RESULTS USING a PRETRAINED MODEL"]
-            desc = [str(item[0] + 1) + ". " + item[1] for item in zip(list(range(len(actions))), actions)]
+            desc = [str(item[0] + 1) + ". " + item[1]
+                    for item in zip(list(range(len(actions))), actions)]
             desc = " ".join(desc)
             print("\n*** APPLIED ACTIONS ARE: {0}".format(desc))
             timeref = time.time()
