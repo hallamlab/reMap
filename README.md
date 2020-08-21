@@ -110,7 +110,7 @@ where *--ssample-label-size* corresponds the maximum number of labels to be samp
 
 ## Citing
 
-If you find *triUMPF* useful in your research, please consider citing the following paper:
+If you find *reMap* useful in your research, please consider citing the following paper:
 
 - M. A. Basher, Abdur Rahman and Hallam, Steven J.. **["reMap: Relabeling  Metabolic Pathway Dataset with Bags to Enhance Predictive Performance."](https://doi.org/10.1101/2020.05.27.119826)**, bioRxiv (2020).
 
