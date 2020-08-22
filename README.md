@@ -20,8 +20,8 @@ Basically, *reMap* requires the following distribution and packages:
 
 ## Experimental Objects and Test Samples
 
-Please download the following files from [Zenodo](https://zenodo.org/record/3962683#.XyH972NKjeQ). The description about files:
-
+Please download the following files from [TO BE ADDED]. The description about files:
+<!-- [Zenodo](https://zenodo.org/record/3962683#.XyH972NKjeQ) -->
 - "golden_X.pkl": Golden dataset of size (63, 3650). First six examples correspond to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
 - "golden_y.pkl": Golden dataset of size (63, 2526). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
 - "golden_B.pkl": Golden dataset of size (63, 200). First six examples correspond pathways to: AraCyc, EcoCyc, HumanCyc, LeishCyc, TrypanoCyc, and YeastCyc.
@@ -112,7 +112,9 @@ where *--ssample-label-size* corresponds the maximum number of labels to be samp
 
 If you find *reMap* useful in your research, please consider citing the following paper:
 
-- M. A. Basher, Abdur Rahman and Hallam, Steven J.. **["reMap: Relabeling  Multi-label Pathway Data with Bags to Enhance Predictive Performance"](https://doi.org/10.1101/2020.05.27.119826)**, bioRxiv (2020).
+- [TO BE ADDED]
+
+<!-- - M. A. Basher, Abdur Rahman and Hallam, Steven J.. **["reMap: Relabeling  Multi-label Pathway Data with Bags to Enhance Predictive Performance"](https://doi.org/10.1101/2020.05.27.119826)**, bioRxiv (2020). -->
 
 ## Contact
 
