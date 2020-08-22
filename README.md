@@ -3,7 +3,7 @@
 
 ## Basic Description
 
-This repo contains an implementation of reMap (**re**labeling **M**ulti-label dataset based on b**a**g a**p**proach) a simple, and yet, generic framework, that performs relabeling examples to a different set of labels, characterized as bags, where a bag comprises of correlated pathways. To obtain bags, any models from [CBT](https://github.com/hallamlab/cbt.git) package can be employed. After obtaining bags, reMap preforms relabeling by alternating between 1) assigning bags to each sample (or feed-forward) and 2) updating reMap's internal parameters (or feed-backward). reMap's effectiveness were evaluated on metabolic pathway prediction (using [leADS](https://github.com/hallamlab/leADS.git)) where resulting performance metrics equaled or exceeded other prediction methods on organismal genomes with improved sensitivity score.
+This repo contains an implementation of reMap (**re**labeling **M**ulti-label dataset based on b**a**g a**p**proach) a simple, and yet, generic framework, that performs relabeling examples to a different set of labels, characterized as bags, where a bag comprises of correlated pathways. To obtain bags, any models from [CBT](https://github.com/hallamlab/cbt.git) package can be employed. After obtaining bags, reMap preforms relabeling by alternating between 1) assigning bags to each sample (or feed-forward) and 2) updating reMap's parameters (or feed-backward). reMap's effectiveness were evaluated on metabolic pathway prediction (using [leADS](https://github.com/hallamlab/leADS.git)) where resulting performance metrics equaled or exceeded other prediction methods on organismal genomes with improved sensitivity score.
 
 ## Dependencies
 
@@ -112,7 +112,7 @@ where *--ssample-label-size* corresponds the maximum number of labels to be samp
 
 If you find *reMap* useful in your research, please consider citing the following paper:
 
-- M. A. Basher, Abdur Rahman and Hallam, Steven J.. **["reMap: Relabeling  Metabolic Pathway Dataset with Bags to Enhance Predictive Performance."](https://doi.org/10.1101/2020.05.27.119826)**, bioRxiv (2020).
+- M. A. Basher, Abdur Rahman and Hallam, Steven J.. **["reMap: Relabeling  Multi-label Pathway Data with Bags to Enhance Predictive Performance"](https://doi.org/10.1101/2020.05.27.119826)**, bioRxiv (2020).
 
 ## Contact
 
