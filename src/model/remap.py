@@ -411,7 +411,7 @@ class reMap:
         print('  \t\t>> Forward step...')
         logger.info('\t\t>> Forward step...')
         list_batches = np.arange(start=0, stop=X.shape[0], step=self.batch)
-        parallel = Parallel(n_jobs=self.num_jobs, verbose=max(0, self.verbose - 1))
+        parallel = Parallel(n_jobs=self.num_jobs, prefer="threads", verbose=max(0, self.verbose - 1))
         if transform:
             results = parallel(delayed(self.__feed_forward)(X[batch:batch + self.batch],
                                                             y[batch:batch + self.batch], None,
@@ -751,7 +751,7 @@ class reMap:
         print(desc)
         logger.info(desc)
         list_batches = np.arange(start=0, stop=y.shape[0], step=self.batch)
-        parallel = Parallel(n_jobs=self.num_jobs, verbose=max(0, self.verbose - 1))
+        parallel = Parallel(n_jobs=self.num_jobs, prefer="threads", verbose=max(0, self.verbose - 1))
         results = parallel(delayed(self.__optimize_d)(y[batch:batch + self.batch],
                                                       y_Bag[batch:batch + self.batch],
                                                       prob_bags2sample[batch:batch + self.batch],
@@ -772,7 +772,7 @@ class reMap:
         X = X[samples_idx, :]
         y = y[samples_idx, :]
         S = self.S[samples_idx[:, None], samples_idx]
-        parallel = Parallel(n_jobs=self.num_jobs, verbose=max(0, self.verbose - 1))
+        parallel = Parallel(n_jobs=self.num_jobs, prefer="threads", verbose=max(0, self.verbose - 1))
         list_batches = np.arange(start=0, stop=X.shape[0], step=self.batch)
 
         # optimize W
@@ -955,7 +955,7 @@ class reMap:
         X = X.toarray()
         y = y.toarray()
         y_Bag = y_Bag.toarray()
-        parallel = Parallel(n_jobs=self.num_jobs, verbose=max(0, self.verbose - 1))
+        parallel = Parallel(n_jobs=self.num_jobs, prefer="threads", verbose=max(0, self.verbose - 1))
         loss_bag = np.zeros((num_samples, self.num_bags))
 
         if self.fit_intercept:
