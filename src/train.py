@@ -2,15 +2,17 @@
 This file is the main entry used to train the input dataset using reMap
 """
 
-import numpy as np
 import os
 import sys
 import time
 import traceback
-from model.remap import reMap
+
+import numpy as np
 from scipy.sparse import lil_matrix
 from sklearn import preprocessing
 from sklearn.metrics.pairwise import cosine_distances
+
+from model.remap import reMap
 from utility.access_file import load_data, save_data
 
 EPSILON = np.finfo(np.float).eps

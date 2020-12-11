@@ -1,8 +1,9 @@
-import numpy as np
 import os
 import pickle as pkl
 import sys
 import traceback
+
+import numpy as np
 from scipy.sparse import lil_matrix
 
 
