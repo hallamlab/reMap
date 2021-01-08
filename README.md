@@ -115,4 +115,4 @@ If you find *reMap* useful in your research, please consider citing the followin
 
 ## Contact
 
-For any inquiries, please contact: [arbasher@alumni.ubc.ca](mailto:arbasher@alumni.ubc.ca)
+For any inquiries, please contact: [arbasher@student.ubc.ca](mailto:arbasher@student.ubc.ca)
