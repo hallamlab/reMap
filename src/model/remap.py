@@ -346,8 +346,6 @@ class reMap:
         bags2sample_idx = np.zeros((num_samples, self.max_bags), dtype=np.int)
         # history of probabilities
         H = np.zeros((self.max_sampling, num_samples, self.num_bags)) + EPSILON
-        prob_prev_label = 0.0
-        prob_curr_label = 0.0
         # any probabilities below some value will be truncated
         eta = (1 - self.pi - self.varomega)
         for idx in np.arange(num_samples):
