@@ -31,7 +31,7 @@ def __train(arg):
     ##########################################################################################################
 
     if arg.define_bags:
-        print("\n{0})- Construct bags_labels centroids...".format(steps))
+        print("\n{0})- Construct pathway groups centroids...".format(steps))
         steps = steps + 1
 
         # load a hin file
@@ -92,17 +92,17 @@ def __train(arg):
         np.savez(os.path.join(arg.dspath, arg.file_name + "_rho.npz"), rho)
         np.savez(os.path.join(arg.dspath, arg.file_name +
                               "_features.npz"), features)
-        np.savez(os.path.join(arg.dspath, arg.file_name + "_bag_centroid.npz"), C)
-        save_data(data=bags_labels, file_name=arg.file_name + "_bag_pathway.pkl", save_path=arg.dspath,
-                  tag="bags_labels with associated pathways", mode="wb")
+        np.savez(os.path.join(arg.dspath, arg.file_name + "_centroid.npz"), C)
+        save_data(data=bags_labels, file_name=arg.file_name + "_pathway_group.pkl", save_path=arg.dspath,
+                  tag="pathway group with associated pathways", mode="wb")
         save_data(data=idxvocab, file_name=arg.file_name + "_idxvocab.pkl", save_path=arg.dspath,
                   tag="pathway ids to pathway features ids", mode="wb")
         save_data(data=labels_distr_idx, file_name=arg.file_name + "_labels_distr_idx.pkl", save_path=arg.dspath,
-                  tag="bags labels batch_idx with associated pathways", mode="wb")
+                  tag="pathway group batch_idx with associated pathways", mode="wb")
         print("\t>> Done...")
 
     if arg.recover_max_bags:
-        print("\n{0})- Recover maximum expected bags_labels...".format(steps))
+        print("\n{0})- Recover maximum expected pathways for each group...".format(steps))
         steps = steps + 1
 
         # load files
@@ -110,17 +110,17 @@ def __train(arg):
             arg.dspath, arg.file_name + "_features.npz"))
         features = features[features.files[0]]
         C = np.load(file=os.path.join(
-            arg.dspath, arg.file_name + "_bag_centroid.npz"))
+            arg.dspath, arg.file_name + "_centroid.npz"))
         C = C[C.files[0]]
-        bags_labels = load_data(file_name=arg.file_name + "_bag_pathway.pkl", load_path=arg.dspath,
-                                tag="bags_labels with associated pathways")
+        bags_labels = load_data(file_name=arg.file_name + "_pathway_group.pkl", load_path=arg.dspath,
+                                tag="pathway group with associated pathways")
         idxvocab = load_data(file_name=arg.file_name + "_idxvocab.pkl", load_path=arg.dspath,
                              tag="pathway ids to pathway features ids")
         y = load_data(file_name=arg.y_name, load_path=arg.dspath, tag="y")
         y_Bag = np.zeros((y.shape[0], C.shape[0]), dtype=np.int)
 
         for s_idx, sample in enumerate(y):
-            desc = "\t>> Recovering maximum number of bags_labels: {0:.2f}%...".format(
+            desc = "\t>> Recovering maximum number of pathways for each group: {0:.2f}%...".format(
                 ((s_idx + 1) / y.shape[0]) * 100)
             if (s_idx + 1) != y.shape[0]:
                 print(desc, end="\r")

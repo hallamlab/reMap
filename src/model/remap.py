@@ -300,7 +300,7 @@ class reMap:
             X = np.concatenate((np.ones((num_samples, 1)), X), axis=1)
 
         if self.subsample_labels_size != self.num_labels:
-            num_labels_example = np.sum(y, axis=0)
+            num_labels_example = np.sum(y, axis=0) + EPSILON
             weight_labels = 1 / num_labels_example
             weight_labels[weight_labels == np.inf] = 0.0
             weight_labels = weight_labels / np.sum(weight_labels)
@@ -312,8 +312,6 @@ class reMap:
         else:
             labels = np.arange(self.num_labels)
 
-        ##TODO: delete below and uncomment the remaining
-        # prob_bag = np.random.uniform(0, 1, size=(num_samples, self.num_bags)) + EPSILON
         prob_bag = np.zeros((num_samples, self.num_bags)) + EPSILON
         coef_intercept_label = self.coef_label[labels]
         if self.fit_intercept:
@@ -1090,11 +1088,8 @@ class reMap:
             # forward pass
             size_x = int(np.ceil(X.shape[0] * self.subsample_input_size))
             samples_idx = np.random.choice(np.arange(num_samples), size_x, replace=False)
-            sstats = self.__batch_forward(X=X[samples_idx, :], y=y[samples_idx, :],
-                                          y_Bag=y_Bag[samples_idx, :],
-                                          snapshot_history=snapshot_history,
-                                          epoch=epoch,
-                                          file_name=model_name,
+            sstats = self.__batch_forward(X=X[samples_idx, :], y=y[samples_idx, :], y_Bag=y_Bag[samples_idx, :],
+                                          snapshot_history=snapshot_history, epoch=epoch, file_name=model_name,
                                           rspath=result_path)
 
             # pick a subsample to compute loss
@@ -1258,8 +1253,7 @@ class reMap:
         self.__check_validity(X, bags_correlation, bags_labels, batch_size, centroids, decision_threshold,
                               label_features, max_sampling, num_jobs, subsample_labels_size, y)
 
-        sstats = self.__batch_forward(X=X, y=y, y_Bag=None, transform=True,
-                                      snapshot_history=snapshot_history,
+        sstats = self.__batch_forward(X=X, y=y, y_Bag=None, transform=True, snapshot_history=snapshot_history,
                                       file_name=file_name, rspath=result_path)
         return sstats["y_Bag"]
 
@@ -1271,8 +1265,7 @@ class reMap:
         self.__check_validity(X, bags_correlation, bags_labels, batch_size, centroids, decision_threshold,
                               label_features, max_sampling, num_jobs, subsample_labels_size, y)
 
-        sstats = self.__batch_forward(X=X, y=y, y_Bag=None, transform=True,
-                                      snapshot_history=snapshot_history,
+        sstats = self.__batch_forward(X=X, y=y, y_Bag=None, transform=True, snapshot_history=snapshot_history,
                                       file_name=file_name, rspath=result_path)
         prob_bags2sample = sstats["prob_bags2sample"]
         return prob_bags2sample.mean()
@@ -1286,8 +1279,7 @@ class reMap:
                               label_features, max_sampling, num_jobs, subsample_labels_size, y)
 
         ## batch forward
-        sstats = self.__batch_forward(X=X, y=y, y_Bag=None, transform=True,
-                                      snapshot_history=snapshot_history,
+        sstats = self.__batch_forward(X=X, y=y, y_Bag=None, transform=True, snapshot_history=snapshot_history,
                                       file_name=file_name, rspath=result_path)
         prob_bags2sample = sstats["prob_bags2sample"]
         accuracy = 0.0

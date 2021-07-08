@@ -10,7 +10,8 @@ __description__ = "This file is the main entry to perform relabeling a multi-lab
 
 import datetime
 import json
-import os, sys
+import os
+import sys
 import textwrap
 from argparse import ArgumentParser
 
@@ -20,7 +21,7 @@ from utility.arguments import Arguments
 
 
 def __print_header():
-    if sys.platform.startswith('win'): 
+    if sys.platform.startswith('win'):
         os.system("cls")
     else:
         os.system("clear")
@@ -61,7 +62,6 @@ def __internal_args(parse_args):
     arg.dspath = parse_args.dspath
     arg.mdpath = parse_args.mdpath
     arg.rspath = parse_args.rspath
-    arg.rsfolder = parse_args.rsfolder
     arg.logpath = parse_args.logpath
 
     ##########################################################################################################
@@ -86,7 +86,9 @@ def __internal_args(parse_args):
     ##########                            ARGUMENTS PREPROCESSING FILES                             ##########
     ##########################################################################################################
 
-    arg.preprocess_dataset = parse_args.preprocess_dataset
+    arg.v_cos = parse_args.v_cos
+    arg.define_bags = parse_args.define_bags
+    arg.recover_max_bags = parse_args.recover_max_bags
 
     ##########################################################################################################
     ##########                              ARGUMENTS USED FOR TRAINING                             ##########
@@ -96,9 +98,6 @@ def __internal_args(parse_args):
     arg.transform = parse_args.transform
     arg.top_k = parse_args.top_k
     arg.alpha = parse_args.alpha
-    arg.v_cos = parse_args.v_cos
-    arg.define_bags = parse_args.define_bags
-    arg.recover_max_bags = parse_args.recover_max_bags
     arg.alpha = parse_args.alpha
     arg.binarize_input_feature = parse_args.binarize
     arg.fit_intercept = parse_args.fit_intercept
@@ -118,9 +117,15 @@ def __internal_args(parse_args):
     arg.score_strategy = parse_args.score_strategy
     arg.loss_threshold = parse_args.loss_threshold
     arg.early_stop = parse_args.early_stop
-    arg.calc_label_cost = parse_args.calc_label_cost
-    arg.calc_bag_cost = parse_args.calc_bag_cost
-    arg.calc_total_cost = parse_args.calc_total_cost
+    arg.calc_label_cost = True
+    if parse_args.no_calc_label_cost:
+        arg.calc_label_cost = False
+    arg.calc_bag_cost = True
+    if parse_args.no_calc_bag_cost:
+        arg.calc_bag_cost = False
+    arg.calc_total_cost = True
+    if parse_args.no_calc_total_cost:
+        arg.calc_total_cost = False
     arg.pi = parse_args.pi
     arg.varomega = parse_args.varomega
     arg.varrho = parse_args.varrho
@@ -166,8 +171,6 @@ def parse_command_line():
     parser.add_argument('--rspath', default=fph.RESULT_PATH, type=str,
                         help='The path to the results. The default is set to result '
                              'folder outside the source code.')
-    parser.add_argument('--rsfolder', default="Prediction_reMap", type=str,
-                        help='The result folder name. The default is set to Prediction_reMap.')
     parser.add_argument('--logpath', default=fph.LOG_PATH, type=str,
                         help='The path to the log directory.')
 
@@ -178,51 +181,48 @@ def parse_command_line():
                         help='The name of the hin model file. (default value: "hin.pkl")')
     parser.add_argument('--features-name', type=str, default='features.npz',
                         help='The features file name. (default value: "features.npz")')
-    parser.add_argument('--bag-centroid-name', type=str, default='bag_centroid.npz',
-                        help='The bags centroids file name. (default value: "bag_centroid.npz")')
+    parser.add_argument('--bag-centroid-name', type=str, default='centroid.npz',
+                        help='The pathway groups centroids file name. (default value: "centroid.npz")')
     parser.add_argument('--rho-name', type=str, default='rho.npz',
                         help='The rho file name. (default value: "rho.npz")')
     parser.add_argument('--bag-sigma-name', type=str, default='sigma.npz',
-                        help='The file name for bags covariance. (default value: "sigma.npz")')
+                        help='The file name for pathway groups covariance. (default value: "sigma.npz")')
     parser.add_argument('--bag-phi-name', type=str, default='phi.npz',
-                        help='The file name for labels distribution over bags. '
+                        help='The file name for pathways distribution over pathway groups. '
                              '(default value: "phi.npz")')
     parser.add_argument('--vocab-name', type=str, default='vocab.pkl',
                         help='The vocab file name. (default value: "vocab.pkl").')
-    parser.add_argument('--X-name', type=str, default='biocyc_X.pkl',
-                        help='The X file name. (default value: "biocyc_X.pkl")')
-    parser.add_argument('--y-name', type=str, default='biocyc_y.pkl',
-                        help='The y file name. (default value: "biocyc_y.pkl")')
-    parser.add_argument('--yB-name', type=str, default='biocyc_B.pkl',
-                        help='The bags file name. (default value: "biocyc_B.pkl")')
-    parser.add_argument('--bags-labels', type=str, default='bag_pathway.pkl',
-                        help='The file name for bags consisting of associated labels. '
-                             '(default value: "bag_pathway.pkl")')
+    parser.add_argument('--X-name', type=str, default='temp_X.pkl',
+                        help='The X file name. (default value: "temp_X.pkl")')
+    parser.add_argument('--y-name', type=str, default='temp_y.pkl',
+                        help='The y file name. (default value: "temp_y.pkl")')
+    parser.add_argument('--yB-name', type=str, default='temp_B.pkl',
+                        help='The pathway groups file name. (default value: "temp_B.pkl")')
+    parser.add_argument('--bags-labels', type=str, default='pathway_group.pkl',
+                        help='The file name for pathway groups consisting of associated labels. '
+                             '(default value: "pathway_group.pkl")')
     parser.add_argument('--model-name', type=str, default='reMap',
                         help='The file name, excluding extension, to save '
                              'an object. (default value: "reMap")')
 
     # Arguments for preprocessing dataset
-    parser.add_argument('--preprocess-dataset', action='store_true', default=False,
-                        help='Preprocess biocyc collection by building bags_labels centroids and '
-                             'define maximum expected number of bags. (default value: False).')
     parser.add_argument('--define-bags', action='store_true', default=False,
-                        help='Whether to construct bags to labels centroids. (default value: False).')
+                        help='Whether to construct pathway groups to labels centroids. (default value: False).')
     parser.add_argument('--recover-max-bags', action='store_true', default=False,
-                        help='Whether to recover maximum number of bags. (default value: False).')
-    parser.add_argument("--v-cos", type=float, default=0.2,
-                        help="A cutoff threshold for consine similarity. (default value: 0.2).")
+                        help='Whether to recover maximum number of pathway groups. (default value: False).')
+    parser.add_argument("--v-cos", type=float, default=0.1,
+                        help="A cutoff threshold for consine similarity. (default value: 0.1).")
 
     # Arguments for training and evaluation
     parser.add_argument('--train', action='store_true', default=False,
                         help='Whether to train the reMap model. (default value: False).')
     parser.add_argument('--transform', action='store_true', default=False,
-                        help='Whether to transform labels to bags from inputs using '
+                        help='Whether to transform labels to pathway groups from inputs using '
                              'a pretrained reMap model. (default value: False).')
-    parser.add_argument('--top-k', type=int, default=250,
-                        help='Top k labels to be considered for each bag. (default value: 250).')
+    parser.add_argument('--top-k', type=int, default=90,
+                        help='Top k labels to be considered for each pathway group. (default value: 90).')
     parser.add_argument("--alpha", type=float, default=16,
-                        help="A hyper-parameter for controlling bags centroids. (default value: 16).")
+                        help="A hyper-parameter for controlling pathway groups centroids. (default value: 16).")
     parser.add_argument('--binarize', action='store_false', default=True,
                         help='Whether binarize data (set feature values to 0 or 1). (default value: True).')
     parser.add_argument('--fit-intercept', action='store_false', default=True,
@@ -251,11 +251,11 @@ def parse_command_line():
     parser.add_argument('--calc-subsample-size', type=int, default=50,
                         help='Compute loss on selected samples. (default value: 50).')
     parser.add_argument('--min-bags', default=10, type=int,
-                        help='Minimum number of bags for each sample. (default value: 10).')
+                        help='Minimum number of pathway groups for each sample. (default value: 10).')
     parser.add_argument('--max-bags', default=50, type=int,
-                        help='Maximum number of bags for each sample. (default value: 50).')
+                        help='Maximum number of pathway groups for each sample. (default value: 50).')
     parser.add_argument('--score-strategy', action='store_false', default=True,
-                        help='Whether to update bags based on score threshold strategy or loss estimator. '
+                        help='Whether to update pathway groups based on score threshold strategy or loss estimator. '
                              '(default value: "score threshold strategy").')
     parser.add_argument("--loss-threshold", type=float, default=0.001,
                         help="A hyper-parameter for deciding the cutoff threshold of the differences "
@@ -263,33 +263,33 @@ def parse_command_line():
     parser.add_argument("--early-stop", action='store_true', default=False,
                         help="Whether to terminate training based on relative change "
                              "between two consecutive iterations. (default value: False).")
-    parser.add_argument("--calc-label-cost", action='store_true', default=False,
+    parser.add_argument("--no-calc-label-cost", action='store_true', default=False,
                         help="Compute label cost, i.e., cost of labels. (default value: False).")
-    parser.add_argument("--calc-bag-cost", action='store_false', default=True,
-                        help="Compute bag cost, i.e., cost of bags. (default value: True).")
-    parser.add_argument("--calc-total-cost", action='store_true', default=False,
-                        help="Compute total cost, i.e., cost of bags plus cost of labels."
-                             " (default value: False).")
+    parser.add_argument("--no-calc-bag-cost", action='store_true', default=False,
+                        help="Compute pathway group cost, i.e., cost of pathway groups. (default value: False).")
+    parser.add_argument("--no-calc-total-cost", action='store_false', default=True,
+                        help="Compute total cost, i.e., cost of pathway groups plus cost of labels."
+                             " (default value: True).")
     parser.add_argument("--pi", type=float, default=0.4,
-                        help="A prior parameter for positive bags. (default value: 0.4).")
+                        help="A prior parameter for positive pathway groups. (default value: 0.4).")
     parser.add_argument("--varomega", type=float, default=0.3,
-                        help="A prior parameter for biased negative bags. (default value: 0.3).")
+                        help="A prior parameter for biased negative pathway groups. (default value: 0.3).")
     parser.add_argument("--varrho", type=float, default=0.7,
-                        help="A hyper-parameter for positive bags. (default value: 0.7).")
+                        help="A hyper-parameter for positive pathway groups. (default value: 0.7).")
     parser.add_argument("--random-allocation", action='store_true', default=False,
                         help='Whether to apply randomized allocation for reMap. (default value: False).')
     parser.add_argument('--theta-bern', type=float, default=0.3,
-                        help='The Bernoulli probability value for allocating bags randomly to either -1, or +1. (default value: 0.3).')
+                        help='The Bernoulli probability value for allocating pathway groups randomly to either -1, or +1. (default value: 0.3).')
     parser.add_argument("--min-neg-ratio", type=float, default=0.3,
-                        help="A hyper-parameter for creating a balanced positive/negative bags. (default value: 0.3).")
+                        help="A hyper-parameter for creating a balanced positive/negative pathway groups. (default value: 0.3).")
     parser.add_argument("--lambdas", nargs="+", type=float, default=[0.01, 0.01, 0.01, 0.01, 0.01, 0.01],
                         help="Six hyper-parameters for constraints. (default value: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01]).")
     parser.add_argument('--label-bag-sim', action='store_false', default=True,
-                        help='Whether to apply similarity constraint among labels within a bag. (default value: True).')
+                        help='Whether to apply similarity constraint among labels within a pathway group. (default value: True).')
     parser.add_argument('--corr-bag-sim', action='store_false', default=True,
-                        help='Whether to apply similarity constraint among bags. (default value: True).')
+                        help='Whether to apply similarity constraint among pathway groups. (default value: True).')
     parser.add_argument('--label-closeness-sim', action='store_false', default=True,
-                        help='Whether to apply closeness constraint of a label to other labels of a bag. '
+                        help='Whether to apply closeness constraint of a label to other labels of a pathway group. '
                              '(default value: True).')
     parser.add_argument('--corr-label-sim', action='store_false', default=True,
                         help='Whether to apply similarity constraint among labels. (default value: True).')
