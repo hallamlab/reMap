@@ -300,7 +300,7 @@ class reMap:
             X = np.concatenate((np.ones((num_samples, 1)), X), axis=1)
 
         if self.subsample_labels_size != self.num_labels:
-            num_labels_example = np.sum(y, axis=0) + EPSILON
+            num_labels_example = np.sum(y, axis=0)
             weight_labels = 1 / num_labels_example
             weight_labels[weight_labels == np.inf] = 0.0
             weight_labels = weight_labels / np.sum(weight_labels)
