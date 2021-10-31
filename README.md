@@ -2,7 +2,7 @@
 
 ## Basic Description
 
-This repo contains an implementation of reMap (reMap (**re**labeling **M**ulti-label pathway d**a**ta with grou**p**s))
+This repo contains an implementation of reMap (reMap (**re**labeling **M**etabolic pathway d**a**ta with grou**p**s))
 a simple, and yet, generic framework, that performs relabeling examples to a different set of labels, characterized as
 pathway groups (or "bags"), where a group comprises with correlated pathways. To obtain groups, any models
 from [CBT](https://github.com/arbasher/cbt.git) package can be employed. After obtaining groups, reMap preforms
