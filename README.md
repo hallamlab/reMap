@@ -17,9 +17,7 @@ See tutorials on the [GitHub wiki](https://github.com/hallamlab/reMap/wiki) page
 
 If you find *reMap* useful in your research, please consider citing the following paper:
 
-- M. A. Basher, Abdur Rahman and Hallam, Steven
-  J.. **["reMap: Relabeling Multi-label Pathway Data with Bags to Enhance Predictive Performance"](https://www.biorxiv.org/content/10.1101/2020.08.21.260109v1)**
-  , bioRxiv (2020).
+- M. A. Basher, Abdur Rahman and Hallam, Steven J.. **["Relabeling metabolic pathway data with groups to improve prediction outcomes"](https://doi.org/10.1101/2020.08.21.260109)**, bioRxiv (2020).
 
 ## Contact
 
